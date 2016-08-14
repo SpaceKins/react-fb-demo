@@ -12,7 +12,7 @@ const Comment = React.createClass({
          { md.render(this.props.author.toString()) }
        </h2>
        <h1>
-Test    { md.render(this.props.hobby.toString()) }
+        { /* md.render(this.props.hobby.toString()) */}
        </h1>
        <span
         dangerouslySetInnerHTML={ this.rawMarkup() }
@@ -65,7 +65,8 @@ const CommentForm = React.createClass({
       return;
     }
 
-    this.setState({author:''})
+    this.props.onCommentSubmit({author:author, text:text});
+    this.setState({author:'',text:''});
   },
  render: function() {
 
@@ -113,6 +114,22 @@ const CommentBox = React.createClass({
          }.bind(this)
        })
   },
+  handleCommentSubmit:function(comment){
+    $.ajax({
+      //url:this.props.url,
+     // host:"10.0.1.14:3000",
+      url:this.props.url, //"10.0.1.14:3000"
+      dataType: 'json',
+      type:"Post",
+      data:comment,
+      sucess:function(data){
+        this.setState({data:data});
+      }.bind(this),
+      error:function(xhr,status,err){
+        console.error(this.props.url,status,err.toString());
+      }.bind(this)
+    })
+  },
   getInitialState: function() {
       return {
             data:[]
@@ -129,8 +146,7 @@ const CommentBox = React.createClass({
        <CommentList
          data={this.state.data}
        />
-       //{this.props.data}
-       <CommentForm data={this.props.data}/>
+       <CommentForm data={this.props.data} onCommentSubmit={this.handleCommentSubmit}/>
      </div>
    );
  }

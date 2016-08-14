@@ -19,6 +19,7 @@ app.use(function(req,res,next){
   next();
 })
 
+
 app.get('/api/comments',function(req,res){
     fs.readFile(COMMENTS_FILE,function(err,data){
       if(err){
@@ -27,8 +28,34 @@ app.get('/api/comments',function(req,res){
       }
 
       res.json(JSON.parse(data));
-    })
+    });
 });
+
+app.post('/api/comments',function(req,res){
+  fs.readFile(COMMENTS_FILE,function(err,data){
+    if(err){
+      console.eror(err);
+      process.exit(1);
+    }
+
+    let comments =JSON.parse(data);
+    let newComment={
+      author: req.body.author,
+      text:req.body.text
+    };
+
+    comments.push(newComment);
+    fs.writeFile(COMMENTS_FILE,JSON.stringify(comments,null,4),function(err){
+      if(err){
+        console.error(err);
+        process.exit(1);
+      }
+
+      res.json(comments);
+    });
+  })
+});
+
 
 app.listen(app.get('port'),function(){
   console.log(`Server listening on port ${app.get('port')}`);   // JS Template literal
