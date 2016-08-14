@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/SpaceKins/react-fb-demo/issues"
   },
-  "homepage": "https://github.com/SpaceKins/react-fb-demo#readme"
+  "homepage": "https://github.com/SpaceKins/react-fb-demo#readme",
+  "dependencies": {
+    "express": "^4.14.0"
+  }
 }
